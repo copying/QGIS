@@ -446,6 +446,7 @@ SET(QGIS_CORE_SRCS
   geometry/qgspolygon.cpp
   geometry/qgsrectangle.cpp
   geometry/qgsregularpolygon.cpp
+  geometry/qgssurface.cpp
   geometry/qgstriangle.cpp
   geometry/qgswkbptr.cpp
   geometry/qgswkbtypes.cpp

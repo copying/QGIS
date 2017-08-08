@@ -40,18 +40,11 @@ class CORE_EXPORT QgsSurface: public QgsAbstractGeometry
 
     /** Returns the minimal bounding box for the geometry
      */
-    virtual QgsRectangle boundingBox() const override
-    {
-      if ( mBoundingBox.isNull() )
-      {
-        mBoundingBox = calculateBoundingBox();
-      }
-      return mBoundingBox;
-    }
+    virtual QgsRectangle boundingBox() const override;
 
   protected:
 
-    virtual void clearCache() const override { mBoundingBox = QgsRectangle(); mCoordinateSequence.clear(); QgsAbstractGeometry::clearCache(); }
+    virtual void clearCache() const override;
 
     mutable QgsCoordinateSequence mCoordinateSequence;
     mutable QgsRectangle mBoundingBox;
