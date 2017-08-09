@@ -360,15 +360,15 @@ QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, dou
       y = mY.at( i );
 
     if ( !QgsWkbTypes::hasZ( mWkbType ) )
-      z = std::numeric_limits<double>::quiet_NaN();
+      z = std::numeric_limits<double>::quiet_NaN(); // there isn't any Z
     else if ( dSpacing > 0 )
       z = nearestValue( mZ.at( i ), dSpacing );
     else
       z = mZ.at( i );
 
     if ( !QgsWkbTypes::hasM( mWkbType ) )
-      m = std::numeric_limits<double>::quiet_NaN();
-    else if (mSpacing > 0)
+      m = std::numeric_limits<double>::quiet_NaN(); // there isn't any Z
+    else if ( mSpacing > 0 )
       m = nearestValue( mM.at( i ), mSpacing );
     else
       m = mM.at( i );
