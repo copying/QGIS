@@ -446,7 +446,22 @@ QgsGeometryCollection *QgsGeometryCollection::asGridified( double hSpacing, doub
     if ( temp )
     {
       if ( !result )
-        result = new QgsGeometryCollection();
+      {
+        if (QgsWkbTypes::flatType(mWkbType) == QgsWkbTypes::MultiCurve)
+          result = new QgsMultiCurve();
+        else if (QgsWkbTypes::flatType(mWkbType) == QgsWkbTypes::MultiLineString)
+          result = new QgsMultiCurve();
+        else if (QgsWkbTypes::flatType(mWkbType) == QgsWkbTypes::MultiPoint)
+          result = new QgsMultiPointV2();
+        else if (QgsWkbTypes::flatType(mWkbType) == QgsWkbTypes::MultiSurface)
+          result = new QgsMultiSurface();
+        else if (QgsWkbTypes::flatType(mWkbType) == QgsWkbTypes::MultiPolygon)
+          result = new QgsMultiPolygonV2();
+        else
+          result = new QgsGeometryCollection();
+
+        result->mWkbType = mWkbType;
+      }
 
       result->addGeometry( temp );
     }

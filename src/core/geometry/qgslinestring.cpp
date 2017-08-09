@@ -347,10 +347,32 @@ QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, dou
   };
   auto roundVertex = [&]( int i )
   {
-    double x = ( hSpacing > 0 )                                ? nearestValue( mX.at( i ), hSpacing ) : mX.at( i );
-    double y = ( vSpacing > 0 )                                ? nearestValue( mY.at( i ), vSpacing ) : mY.at( i );
-    double z = ( dSpacing > 0 && QgsWkbTypes::hasZ( mWkbType ) ) ? nearestValue( mZ.at( i ), dSpacing ) : mZ.at( i );
-    double m = ( mSpacing > 0 && QgsWkbTypes::hasM( mWkbType ) ) ? nearestValue( mM.at( i ), mSpacing ) : mM.at( i );
+    double x, y, z, m;
+
+    if ( hSpacing > 0 )
+      x = nearestValue( mX.at( i ), hSpacing );
+    else
+      x = mX.at( i );
+
+    if ( vSpacing > 0 )
+      y = nearestValue( mY.at( i ), vSpacing );
+    else
+      y = mY.at( i );
+
+    if ( !QgsWkbTypes::hasZ( mWkbType ) )
+      z = std::numeric_limits<double>::quiet_NaN();
+    else if ( dSpacing > 0 )
+      z = nearestValue( mZ.at( i ), dSpacing );
+    else
+      z = mZ.at( i );
+
+    if ( !QgsWkbTypes::hasM( mWkbType ) )
+      m = std::numeric_limits<double>::quiet_NaN();
+    else if (mSpacing > 0)
+      m = nearestValue( mM.at( i ), mSpacing );
+    else
+      m = mM.at( i );
+
 
 
     return QgsPoint( pointType, x, y, z, m );
@@ -366,7 +388,7 @@ QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, dou
       result->mZ.append( point.z() );
 
     if ( QgsWkbTypes::hasM( mWkbType ) )
-      result->mM.append( point.z() );
+      result->mM.append( point.m() );
   };
 
   QgsPoint last;
@@ -392,7 +414,7 @@ QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, dou
     return nullptr;
   }
 
-  result->clearCache();
+
   return result;
 }
 
