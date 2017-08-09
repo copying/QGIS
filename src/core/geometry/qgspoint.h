@@ -390,6 +390,10 @@ class CORE_EXPORT QgsPoint: public QgsAbstractGeometry
     virtual int nCoordinates() const override { return 1; }
     virtual QgsAbstractGeometry *boundary() const override SIP_FACTORY;
 
+
+    // TODO Copy documentation from QgsAbstractGeometry
+    virtual QgsPoint *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const override SIP_FACTORY;
+
     //low-level editing
     virtual bool insertVertex( QgsVertexId position, const QgsPoint &vertex ) override { Q_UNUSED( position ); Q_UNUSED( vertex ); return false; }
     virtual bool moveVertex( QgsVertexId position, const QgsPoint &newPos ) override;

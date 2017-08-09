@@ -177,6 +177,9 @@ class CORE_EXPORT QgsLineString: public QgsCurve
     QDomElement asGML3( QDomDocument &doc, int precision = 17, const QString &ns = "gml" ) const override;
     QString asJSON( int precision = 17 ) const override;
 
+    // TODO Copy documentation from QgsAbstractGeometry
+    virtual QgsLineString *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const override SIP_FACTORY;
+
     //curve interface
     virtual double length() const override;
     virtual QgsPoint startPoint() const override;

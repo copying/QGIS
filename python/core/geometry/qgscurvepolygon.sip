@@ -162,6 +162,8 @@ Adds an interior ring to the geometry (takes ownership)
     virtual bool dropZValue();
     virtual bool dropMValue();
 
+    virtual QgsCurvePolygon *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const /Factory/;
+
   protected:
 
 

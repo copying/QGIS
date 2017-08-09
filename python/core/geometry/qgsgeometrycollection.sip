@@ -102,6 +102,8 @@ Adds a geometry and takes ownership. Returns true in case of success.
     virtual bool nextVertex( QgsVertexId &id, QgsPoint &vertex /Out/ ) const;
 
 
+    virtual QgsGeometryCollection *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const /Factory/;
+
     virtual bool insertVertex( QgsVertexId position, const QgsPoint &vertex );
     virtual bool moveVertex( QgsVertexId position, const QgsPoint &newPos );
     virtual bool deleteVertex( QgsVertexId position );

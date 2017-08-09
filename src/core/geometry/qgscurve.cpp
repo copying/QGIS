@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <memory>
+
 #include "qgscurve.h"
 #include "qgslinestring.h"
 #include "qgspoint.h"
@@ -145,6 +147,12 @@ QPolygonF QgsCurve::asQPolygonF() const
     points << QPointF( xAt( i ), yAt( i ) );
   }
   return points;
+}
+
+QgsCurve *QgsCurve::asGridified( double hSpacing, double vSpacing, double dSpacing, double mSpacing, double tolerance, SegmentationToleranceType toleranceType ) const
+{
+  std::unique_ptr<QgsLineString> line( curveToLine( tolerance, toleranceType ) );
+  return line->asGridified( hSpacing, vSpacing, dSpacing, mSpacing, tolerance, toleranceType );
 }
 
 void QgsCurve::clearCache() const

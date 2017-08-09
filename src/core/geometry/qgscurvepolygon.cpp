@@ -924,3 +924,28 @@ bool QgsCurvePolygon::dropMValue()
   clearCache();
   return true;
 }
+
+QgsCurvePolygon *QgsCurvePolygon::asGridified( double hSpacing, double vSpacing, double dSpacing, double mSpacing, double tolerance, SegmentationToleranceType toleranceType ) const
+{
+  if ( !mExteriorRing )
+    return nullptr;
+
+  QgsCurve *temp = mExteriorRing->asGridified( hSpacing, vSpacing, dSpacing, mSpacing, tolerance, toleranceType );
+
+  if ( !temp )
+    return nullptr;
+
+  QgsPolygonV2 *result = new QgsPolygonV2();
+  result->mWkbType = mWkbType;
+  result->mExteriorRing = temp;
+
+  const auto &interior = mInteriorRings;  //required to get a const_iterator instead of a regular iterator which would probably detach
+  for ( auto && ring : interior )
+  {
+    temp = ring->asGridified( hSpacing, vSpacing, dSpacing, mSpacing, tolerance, toleranceType );
+    if ( temp )
+      result->mInteriorRings.append( temp );
+  }
+
+  return result;
+}

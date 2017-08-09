@@ -42,6 +42,9 @@ class CORE_EXPORT QgsSurface: public QgsAbstractGeometry
      */
     virtual QgsRectangle boundingBox() const override;
 
+    // TODO Copy documentation from QgsAbstractGeometry
+    virtual QgsAbstractGeometry *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const override SIP_FACTORY;
+
   protected:
 
     virtual void clearCache() const override;

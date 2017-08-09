@@ -315,6 +315,87 @@ QString QgsLineString::asJSON( int precision ) const
   return "{\"type\": \"LineString\", \"coordinates\": " + QgsGeometryUtils::pointsToJSON( pts, precision ) + '}';
 }
 
+QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, double dSpacing, double mSpacing, double /* tolerance */, SegmentationToleranceType /* toleranceType */ ) const
+{
+  QgsLineString *result = new QgsLineString();
+
+  int length = numPoints();
+
+  if ( length <= 0 )
+    return result;
+
+
+
+  // Check if the two poits are equal in this context
+  auto isEqualPoint = [&]( const QgsPoint & a, const QgsPoint & b )
+  {
+    return ( a.x() == b.x() )
+           && ( a.y() == b.y() )
+           && ( !QgsWkbTypes::hasZ( mWkbType ) || dSpacing <= 0 || a.z() == b.z() )
+           && ( !QgsWkbTypes::hasM( mWkbType ) || mSpacing <= 0 || a.m() == b.m() );
+  };
+
+
+
+  QgsWkbTypes::Type pointType = QgsWkbTypes::zmType( QgsWkbTypes::Point, QgsWkbTypes::hasZ( mWkbType ), QgsWkbTypes::hasM( mWkbType ) );
+
+
+  // Get the point at i and round it (in an efficient way)
+  auto nearestValue = []( double n, double spacing ) -> double
+  {
+    return round( n / spacing ) * spacing;
+  };
+  auto roundVertex = [&]( int i )
+  {
+    double x = ( hSpacing > 0 )                                ? nearestValue( mX.at( i ), hSpacing ) : mX.at( i );
+    double y = ( vSpacing > 0 )                                ? nearestValue( mY.at( i ), vSpacing ) : mY.at( i );
+    double z = ( dSpacing > 0 && QgsWkbTypes::hasZ( mWkbType ) ) ? nearestValue( mZ.at( i ), dSpacing ) : mZ.at( i );
+    double m = ( mSpacing > 0 && QgsWkbTypes::hasM( mWkbType ) ) ? nearestValue( mM.at( i ), mSpacing ) : mM.at( i );
+
+
+    return QgsPoint( pointType, x, y, z, m );
+  };
+
+  auto append = [this, &result]( QgsPoint point )
+  {
+
+    result->mX.append( point.x() );
+    result->mY.append( point.y() );
+
+    if ( QgsWkbTypes::hasZ( mWkbType ) )
+      result->mZ.append( point.z() );
+
+    if ( QgsWkbTypes::hasM( mWkbType ) )
+      result->mM.append( point.z() );
+  };
+
+  QgsPoint last;
+  QgsPoint current;
+
+  last = roundVertex( 0 );
+  append( last );
+
+
+  for ( int i = 1; i < length; ++i )
+  {
+    current = roundVertex( i );
+    if ( !isEqualPoint( current, last ) )
+    {
+      append( current );
+      last = current;
+    }
+  }
+
+  if ( result->mX.length() < 2 )
+  {
+    delete result;
+    return nullptr;
+  }
+
+  result->clearCache();
+  return result;
+}
+
 /***************************************************************************
  * This class is considered CRITICAL and any change MUST be accompanied with
  * full unit tests.

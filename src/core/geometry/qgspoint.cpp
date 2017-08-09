@@ -472,7 +472,6 @@ bool QgsPoint::convertTo( QgsWkbTypes::Type type )
   return false;
 }
 
-
 QPointF QgsPoint::toQPointF() const
 {
   return QPointF( mX, mY );
@@ -578,4 +577,19 @@ QgsPoint QgsPoint::project( double distance, double azimuth, double inclination 
   }
 
   return QgsPoint( mX + dx, mY + dy, mZ + dz, mM, pType );
+}
+
+QgsPoint *QgsPoint::asGridified( double hSpacing, double vSpacing, double dSpacing, double mSpacing, double /* tolerance */, SegmentationToleranceType /* toleranceType */ ) const
+{
+  auto nearestValue = []( double n, double spacing ) -> double
+  {
+    return round( n / spacing ) * spacing;
+  };
+
+  double x = ( hSpacing > 0 )                                ? nearestValue( mX, hSpacing ) : mX;
+  double y = ( vSpacing > 0 )                                ? nearestValue( mY, vSpacing ) : mY;
+  double z = ( dSpacing > 0 && QgsWkbTypes::hasZ( mWkbType ) ) ? nearestValue( mZ, dSpacing ) : mZ;
+  double m = ( mSpacing > 0 && QgsWkbTypes::hasM( mWkbType ) ) ? nearestValue( mM, mSpacing ) : mM;
+
+  return new QgsPoint( mWkbType, x, y, z, m );
 }

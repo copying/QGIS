@@ -103,6 +103,9 @@ class CORE_EXPORT QgsGeometryCollection: public QgsAbstractGeometry
                                    double epsilon ) const override;
     bool nextVertex( QgsVertexId &id, QgsPoint &vertex SIP_OUT ) const override;
 
+    // TODO Copy documentation from QgsAbstractGeometry
+    virtual QgsGeometryCollection *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const override SIP_FACTORY;
+
     //low-level editing
     virtual bool insertVertex( QgsVertexId position, const QgsPoint &vertex ) override;
     virtual bool moveVertex( QgsVertexId position, const QgsPoint &newPos ) override;

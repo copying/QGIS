@@ -434,6 +434,27 @@ bool QgsGeometryCollection::nextVertex( QgsVertexId &id, QgsPoint &vertex ) cons
   return mGeometries.at( id.part )->nextVertex( id, vertex );
 }
 
+QgsGeometryCollection *QgsGeometryCollection::asGridified( double hSpacing, double vSpacing, double dSpacing, double mSpacing, double tolerance, SegmentationToleranceType toleranceType ) const
+{
+  QgsGeometryCollection *result = nullptr;
+  QgsAbstractGeometry *temp;
+
+  int nGeoms = mGeometries.size();
+  for ( int i = 0; i < nGeoms; ++i )
+  {
+    temp = mGeometries.at( i )->asGridified( hSpacing, vSpacing, dSpacing, mSpacing, tolerance, toleranceType );
+    if ( temp )
+    {
+      if ( !result )
+        result = new QgsGeometryCollection();
+
+      result->addGeometry( temp );
+    }
+  }
+
+  return result;
+}
+
 bool QgsGeometryCollection::insertVertex( QgsVertexId position, const QgsPoint &vertex )
 {
   if ( position.part >= mGeometries.size() )

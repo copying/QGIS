@@ -140,6 +140,9 @@ class CORE_EXPORT QgsCurvePolygon: public QgsSurface
     virtual bool dropZValue() override;
     virtual bool dropMValue() override;
 
+    // TODO Copy documentation from QgsAbstractGeometry
+    virtual QgsCurvePolygon *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const override SIP_FACTORY;
+
   protected:
 
     QgsCurve *mExteriorRing = nullptr;

@@ -189,6 +189,8 @@ Closes the line string by appending the first point to the end of the line, if i
     virtual QString asJSON( int precision = 17 ) const;
 
 
+    virtual QgsLineString *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const /Factory/;
+
     virtual double length() const;
     virtual QgsPoint startPoint() const;
     virtual QgsPoint endPoint() const;

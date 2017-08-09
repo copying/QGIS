@@ -414,6 +414,23 @@ class CORE_EXPORT QgsAbstractGeometry
      */
     virtual bool convertTo( QgsWkbTypes::Type type );
 
+    /** Makes a new geometry with the vertices moved to the closer intersection of the imaginary grid with the specified spacings.
+     * If it's a curved geometry, it segments it into lines.
+     * Use 0 to disable a spacing (0 spacing doen't modify).
+     * It is possible to use it in the depth and the m value.
+     * This function can be used to round.
+     * Some points or even entire geometries may be removed if they snap to the same point.
+     * The result may be an invalid geometry.
+     * \param hSpacing Spacing between horitzontal lines of the imaginary grid
+     * \param vSpacing Spacing between vertical lines of the imaginary grid
+     * \param dSpacing Spacing between depth lines of the imaginary grid
+     * \param mSpacing Spacing between the values of m like they were lines of the imaginary grid
+     * \param tolerance Tolerance in the segmentation of the segmentation in case that the geometry is a curve (does nothing if it's not a curve)
+     * \param toleranceType Type of tolerance to apply in case of segmentation (does nothing if it's not a curve)
+     * \return The gridified geometry
+     */
+    virtual QgsAbstractGeometry *asGridified( double hSpacing, double vSpacing, double dSpacing = 0, double mSpacing = 0, double tolerance = M_PI_2 / 90, SegmentationToleranceType toleranceType = MaximumAngle ) const = 0 SIP_FACTORY;
+
   protected:
     QgsWkbTypes::Type mWkbType;
 

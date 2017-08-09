@@ -16,12 +16,7 @@
  ***************************************************************************/
 
 #include "qgssurface.h"
-#include "qgspoint.h" // Without this header the compilation fails. Here's the explanation:
-                      //   QgsCoordinateSequence is actually QList< QList< QList< QgsPoint > > >.
-                      //   When you use mCoordinateSequence.clear(), you may be destroying a QList.
-                      //   This makes a chain reaction until it reaches QgsPoint, which must be fully
-                      //   qualified but is not (until adding this header it's forward declared).
-                      //   PS: I don't even know how, but I undertood the error quite fast.
+#include "qgspoint.h"
 
 QgsRectangle QgsSurface::boundingBox() const
 {
@@ -30,6 +25,12 @@ QgsRectangle QgsSurface::boundingBox() const
     mBoundingBox = calculateBoundingBox();
   }
   return mBoundingBox;
+}
+
+QgsAbstractGeometry *QgsSurface::asGridified( double /* hSpacing */, double /* vSpacing */, double /* dSpacing */, double /* mSpacing */, double /* tolerance */, SegmentationToleranceType /* toleranceType */ ) const
+{
+  // This should never be called. Required from SIP.
+  return nullptr;
 }
 
 void QgsSurface::clearCache() const
