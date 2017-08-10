@@ -408,7 +408,9 @@ QgsLineString *QgsLineString::asGridified( double hSpacing, double vSpacing, dou
     }
   }
 
-  if ( result->mX.length() < 2 )
+  // if it's not closed, with 2 points you get a correct line
+  // if it is, you need at least 4
+  if ( result->mX.length() < 2 || ( isClosed() && result->mX.length() < 4 ) )
   {
     delete result;
     return nullptr;
